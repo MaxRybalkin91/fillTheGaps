@@ -33,6 +33,6 @@ public class OrderService {
     }
 
     public boolean isDelivered(long orderId) {
-        return currentOrders.get(orderId).isDelivered();
+        return currentOrders.get(orderId).checkDelivered();
     }
 }

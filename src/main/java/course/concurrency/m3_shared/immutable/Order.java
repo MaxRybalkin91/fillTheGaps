@@ -43,10 +43,11 @@ public class Order {
         return id.get();
     }
 
-    public boolean isDelivered() {
+    public boolean checkDelivered() {
         if (isReady()) {
             deliver();
+            return true;
         }
-        return this.status == Status.DELIVERED;
+        return false;
     }
 }
