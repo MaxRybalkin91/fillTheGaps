@@ -10,7 +10,7 @@ public class Order {
     private final List<Item> items;
     private final PaymentInfo paymentInfo;
     private final Boolean isPacked;
-    private final Status status;
+    private Status status;
 
     public Order(List<Item> items, PaymentInfo paymentInfo, Boolean isPacked, Status status) {
         id.getAndIncrement();
@@ -28,8 +28,10 @@ public class Order {
         return new Order(this.items, this.paymentInfo, true, Status.IN_PROGRESS);
     }
 
-    public Order deliver() {
-        return new Order(this.items, this.paymentInfo, this.isPacked, Status.DELIVERED);
+    public void tryDeliver() {
+        if (this.isReady()) {
+            this.status = Status.DELIVERED;
+        }
     }
 
     public boolean isReady() {
@@ -43,11 +45,7 @@ public class Order {
         return id.get();
     }
 
-    public boolean checkDelivered() {
-        if (isReady()) {
-            deliver();
-            return true;
-        }
-        return false;
+    public boolean isDelivered() {
+        return this.status == Status.DELIVERED;
     }
 }
