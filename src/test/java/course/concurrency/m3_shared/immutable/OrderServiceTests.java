@@ -10,10 +10,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class OrderServiceTests {
+    private final OrderService service = new OrderService();
 
-    private OrderService service = new OrderService();
-
-    private List<Item> items = List.of(new Item(), new Item());
+    private final List<Item> items = List.of(new Item(), new Item());
 
     @Test
     public void testDelivery() {
@@ -70,18 +69,18 @@ public class OrderServiceTests {
         int iterations = 10_000;
         ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
-        BlockingQueue<Long> orderToPack = new ArrayBlockingQueue<>(iterations*3);
+        BlockingQueue<Long> orderToPack = new ArrayBlockingQueue<>(iterations * 3);
         BlockingQueue<Long> orderToPay = new ArrayBlockingQueue<>(iterations);
         BlockingQueue<Long> orderIdLog = new ArrayBlockingQueue<>(iterations);
 
-        for(int i = 0; i< iterations; ++i) {
+        for (int i = 0; i < iterations; ++i) {
             Long id = service.createOrder(items);
-                        orderToPack.offer(id);
-                        orderToPay.offer(id);
-                        orderIdLog.offer(id);
+            orderToPack.offer(id);
+            orderToPay.offer(id);
+            orderIdLog.offer(id);
         }
 
-        for(int i = 0; i< iterations; ++i) {
+        for (int i = 0; i < iterations; ++i) {
             executor.submit(() -> service.setPacked(orderToPack.poll()));
             executor.submit(() -> service.updatePaymentInfo(orderToPay.poll(), new PaymentInfo()));
         }
